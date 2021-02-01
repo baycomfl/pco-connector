@@ -1,6 +1,3 @@
-function getAuthType() {
-  Logger.log('getAuthType()');
-}
 
 function getConfig() {
   Logger.log('getConfig())');
