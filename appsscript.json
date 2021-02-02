@@ -1,7 +1,23 @@
 {
-  "timeZone": "America/New_York",
-  "dependencies": {
+  "dataStudio": {
+    "name": "Planning Center Online Data Connector",
+    "company": "Bayside Community Church",
+    "companyUrl": "https://mybayside.church/",
+    "logoUrl": "https://avatars.githubusercontent.com/u/76542979?s=200&v=4",
+    "addonUrl": "https://github.com/baycomfl/pco-connector",
+    "supportUrl": "https://github.com/baycomfl/pco-connector/issues",
+    "description": "TBD",
+    "shortDescription": "Connect your PCO Data.",
+    "privacyPolicyUrl": "https://mybayside.church/privacy-policy/",
+    "termsOfServiceUrl": "https://mybayside.church/tos/",
+    "authType": ["OAUTH2"],
+    "feeType": ["FREE"],
+    "sources": [],
+    "templates": {
+      "default": ""
+    }
   },
-  "exceptionLogging": "STACKDRIVER",
-  "runtimeVersion": "V8"
+  "urlFetchWhitelist": [
+    "https://api.planningcenteronline.com/"
+  ]
 }

@@ -1,9 +1,12 @@
+// declare connector
+var pcoConnector = DataStudioApp.createCommunityConnector();
+
 /**
  * Returns the Auth Type of this connector.
  * @return {object} The Auth type.
  */
 function getAuthType() {
-  var pcoConnector = DataStudioApp.createCommunityConnector();
+  Logger.log('getAuthType()');
   return pcoConnector.newAuthTypeResponse()
     .setAuthType(pcoConnector.AuthType.OAUTH2)
     .build();
@@ -30,6 +33,7 @@ function isAuthValid() {
  * @return {Service} The OAuth Service
  */
 function getOAuthService() {
+  console.log("GET AUTH SERV", CLIENT_ID, SECRET);
   return OAuth2.createService('pcoAuthService')
     .setAuthorizationBaseUrl('https://api.planningcenteronline.com/oauth/authorize')
     .setTokenUrl('https://api.planningcenteronline.com/oauth/token')
