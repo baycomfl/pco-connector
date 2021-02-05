@@ -10,14 +10,16 @@
     "shortDescription": "Connect your PCO Data.",
     "privacyPolicyUrl": "https://mybayside.church/privacy-policy/",
     "termsOfServiceUrl": "https://mybayside.church/tos/",
-    "authType": ["OAUTH2"],
-    "feeType": ["FREE"],
-    "sources": [],
-    "templates": {
-      "default": ""
-    }
+    "authType": [
+      "OAUTH2"
+    ],
+    "feeType": [
+      "FREE"
+    ],
+    "sources": []
   },
   "urlFetchWhitelist": [
     "https://api.planningcenteronline.com/"
-  ]
+  ],
+  "runtimeVersion": "V8"
 }
