@@ -1,5 +1,5 @@
 // declare connector
-var pcoConnector = DataStudioApp.createCommunityConnector();
+let pcoConnector = DataStudioApp.createCommunityConnector();
 
 /**
  * Returns the Auth Type of this connector.
