@@ -1,6 +1,12 @@
 
 // connector declared in auth.gs
 // const pcoConnector = DataStudioApp.createCommunityConnector();
+
+// TODO figure this out for non devs to return false
+function isAdminUser() {
+  return true;
+}
+
 function getConfig(request) {
   try {
     let config = pcoConnector.getConfig();
@@ -9,18 +15,19 @@ function getConfig(request) {
     if (isFirstRequest) {
       config.setIsSteppedConfig(true);
     }
-    config
+    let source = config
       .newSelectSingle()
       .setId('selectedAPI')
       .setName('Select Data Source')
       .setIsDynamic(true)
       .setHelpText('Select the PCO data source.')
-      .setAllowOverride(true)
-      .addOption(config.newOptionBuilder().setLabel('Lists').setValue('lists'))
-      .addOption(config.newOptionBuilder().setLabel('Events').setValue('events'))
+      .setAllowOverride(true);
+    Object.keys(ENDPOINTS).forEach(endpoint =>{
+      source.addOption(config.newOptionBuilder().setLabel(ENDPOINTS[endpoint].label).setValue(endpoint))
+    });
     
     if(!isFirstRequest){
-      const URL = configParams.selectedAPI === "lists" ? LISTS_URL : EVENTS_URL
+      const URL = ENDPOINTS[configParams.selectedAPI].url;
       let pickList = config.newSelectMultiple()
         .setId("selectedItems")
         .setName("Select Your Items")
@@ -56,8 +63,7 @@ function getConfig(request) {
         )
       });
     }     
-    
-    
+     
     return config.build()
     
   } catch (e) {
@@ -73,30 +79,7 @@ function getSchema(request){
   try {
     console.log("getSchema",request);
   
-  let fields = pcoConnector.getFields();
-  let types = pcoConnector.FieldType;
-
-  let created = fields.newDimension()
-      .setId('Created')
-      .setName('Date Created')
-      .setDescription('The date the list was created')
-      .setType(types.YEAR_MONTH_DAY)
-      .setGroup('Date');
-
-  let updated = fields.newDimension()
-      .setId('Updated')
-      .setName('Date Update')
-      .setDescription('The date the list was updated')
-      .setType(types.YEAR_MONTH_DAY)
-      .setGroup('Date');
-
-  let people = fields.newDimension()
-      .setId('People')
-      .setName('People')
-      .setDescription('The count of people')
-      .setType(types.NUMBER);
-    
-    fields.setDefaultDimension(people.getId());
+    let fields = deriveSchema(ATTRIBUTES[request.configParams.selectedAPI]);
 
     return { 'schema': fields.build() };
 
