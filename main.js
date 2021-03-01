@@ -78,9 +78,7 @@ function getConfig(request) {
 function getSchema(request){
   try {
     console.log("getSchema",request);
-  
-    let fields = deriveSchema(ATTRIBUTES[request.configParams.selectedAPI]);
-
+    const fields = deriveSchema(ENDPOINTS[request.configParams.selectedAPI].attributes);
     return { 'schema': fields.build() };
 
   } catch (e) {
@@ -94,7 +92,20 @@ function getSchema(request){
 
 function getData(request){
   try {
-    console.log("getData", request);
+    console.log("getData", request); 
+    let requestedFieldIds = request.fields.map(field => {return field.name;});
+    const fields = deriveSchema(ENDPOINTS[request.configParams.selectedAPI].attributes);
+    const filteredFields = fields.forIds(requestedFieldIds);
+    const schema = filteredFields.build();
+console.log("SCHEMA!!!", schema);
+  return {
+    "schema": schema,
+    "rows":[ 
+      {
+        "values": [false,false, 0, 20210211023031,20210211023031,"Attendance attended 'Weekend at Bayside (EBC)' 'any location' 'any time' since 1 week ago any number of times include 'Guests' or 'Regulars'",false,false,false,"null",true,20210211023031,true,"exact",false,"complete","all",794,20210211023031]
+      }
+    ]
+  };
   } catch (e) {
     pcoConnector.newUserError()
       .setDebugText('Error getting data: ' + e)
