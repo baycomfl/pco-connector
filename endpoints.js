@@ -38,7 +38,7 @@ const ENDPOINTS = {
       "updated_at": "timestamp"
     },
     "label": "Events",
-    "url": "https://api.planningcenteronline.com/check-ins/v2/events?per_page=1",
+    "url": "https://api.planningcenteronline.com/check-ins/v2/events?per_page=100",
     "statusCode": 200
   }
 }; 
