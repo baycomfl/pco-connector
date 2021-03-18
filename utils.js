@@ -1,3 +1,4 @@
+
 // takes in attributes object and builds fields
 const deriveSchema = (attributes) => {
   
@@ -56,11 +57,39 @@ const deriveSchema = (attributes) => {
 // TODO investigate cache
 const requestPCO = (selectedAPI, options = {}) => {
   // get the URL from the config and abort if not found
-  const baseUrl = ENDPOINTS[selectedAPI].url;
-  if(typeof baseUrl === "undefined"){
+  const API = ENDPOINTS[selectedAPI];
+  if(typeof API === "undefined"){
     throw new Error("selected api not found");
   }
-  const url = `${baseUrl}${options.hasOwnProperty("offset") ? `&offset=${options.offset}` : ""}`;
+
+  // base url from config
+  let url = API.url;
+  // add the path params
+  if(options.hasOwnProperty("rest_params")){
+    options["rest_params"].forEach(param => {
+      url = `${url}/${param}`;
+    });
+  }
+
+  //${API.hasOwnProperty("per_page") ? `?per_page=${API.per_page}` : ""}`;
+  let noQS = true;
+  if(API.hasOwnProperty("per_page")){
+    noQS = false;
+    url = `${url}?per_page=${API["per_page"]}`;
+  }
+  
+  // TODO test this
+  // add the query params
+  if(options.hasOwnProperty("qs")){
+    Object.keys(options["qs"]).forEach(param => {
+      if(noQS){
+        noQS = false;
+        url = `${url}?${param}=${options["qs"][param]}`;
+      } else {
+        url = `${url}&${param}=${options["qs"][param]}`;
+      }
+    });
+  }
   
   // add the bearer token if not specified
   if(!options.hasOwnProperty("headers")){
@@ -86,7 +115,10 @@ const requestPCO = (selectedAPI, options = {}) => {
         responsePayload.meta.hasOwnProperty("next") &&
         responsePayload.meta.next.hasOwnProperty("offset")
       ){
-        options.offset = responsePayload.meta.next.offset;
+        if(!options.hasOwnProperty("qs")){
+          options.qs = {};
+        }
+        options.qs.offset = responsePayload.meta.next.offset;
         const nextResponse = requestPCO(selectedAPI, options);
         responsePayload.data = responsePayload.data.concat(responsePayload.data, nextResponse.data);
       }

@@ -22,7 +22,8 @@ const ENDPOINTS = {
       "updated_at": "timestamp"
     },
     "label": "Lists",
-    "url": "https://api.planningcenteronline.com/people/v2/lists?per_page=100",
+    "url": "https://api.planningcenteronline.com/people/v2/lists",
+    "per_page": 100,
     "statusCode": 200
   },
   "events": {
@@ -38,7 +39,8 @@ const ENDPOINTS = {
       "updated_at": "timestamp"
     },
     "label": "Events",
-    "url": "https://api.planningcenteronline.com/check-ins/v2/events?per_page=100",
+    "url": "https://api.planningcenteronline.com/check-ins/v2/events",
+    "per_page": 100,
     "statusCode": 200
   }
 }; 

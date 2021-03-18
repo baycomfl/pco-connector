@@ -31,7 +31,6 @@ function getConfig(request) {
         .setId("selectedItems")
         .setName("Select Your Items")
         .setHelpText("Select the PCO items to import.")
-      //TODO aggregate and filter
       const response = requestPCO(configParams.selectedAPI, {"aggregate": true});
       response.data.forEach(item => {
         pickList.addOption(
@@ -87,11 +86,22 @@ function getData(request){
     let requestedFieldIds = request.fields.map(field => {return field.name;});
     const fields = deriveSchema(ENDPOINTS[request.configParams.selectedAPI].attributes);
     const requestedFields = fields.forIds(requestedFieldIds);
+//configParams: { selectedAPI: 'lists', selectedItems: '1609138,1611113' },
+    const apiResponses = [];
+    request.configParams.selectedItems.split(",").forEach(item =>{
+      apiResponses.push(requestPCO(request.configParams.selectedAPI, {"rest_params": [item]}));
+    });
+    console.log("RAW ROWS!!!", apiResponses);
+    // TODO add util to build values arrays
+    // TODO add util to filter values arrays based on requested fields.
     const schema = requestedFields.build();
-  
+    console.log("SCHEMA!!!", schema);
     return {
       "schema": schema,
       "rows":[ 
+        {
+          "values": [false,false]
+        },
         {
           "values": [false,false]
         }
