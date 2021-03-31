@@ -84,28 +84,18 @@ function getData(request){
   try {
     console.log("getData", request); 
     let requestedFieldIds = request.fields.map(field => {return field.name;});
-    const fields = deriveSchema(ENDPOINTS[request.configParams.selectedAPI].attributes);
+    const selectedAPI = request.configParams.selectedAPI;
+    const fields = deriveSchema(ENDPOINTS[selectedAPI].attributes);
     const requestedFields = fields.forIds(requestedFieldIds);
-//configParams: { selectedAPI: 'lists', selectedItems: '1609138,1611113' },
+    const schema = requestedFields.build();
     const apiResponses = [];
     request.configParams.selectedItems.split(",").forEach(item =>{
-      apiResponses.push(requestPCO(request.configParams.selectedAPI, {"rest_params": [item]}));
+      apiResponses.push(requestPCO(selectedAPI, {"rest_params": [item]}));
     });
-    console.log("RAW ROWS!!!", apiResponses);
-    // TODO add util to build values arrays
-    // TODO add util to filter values arrays based on requested fields.
-    const schema = requestedFields.build();
-    console.log("SCHEMA!!!", schema);
+    const rows = buildRows(requestedFieldIds, apiResponses);
     return {
       "schema": schema,
-      "rows":[ 
-        {
-          "values": [false,false]
-        },
-        {
-          "values": [false,false]
-        }
-      ]
+      "rows": rows
     };
   } catch (e) {
     pcoConnector.newUserError()

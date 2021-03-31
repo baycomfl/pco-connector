@@ -140,3 +140,20 @@ const requestPCO = (selectedAPI, options = {}) => {
     throw new Error(`HTTP code ${responseCode}: ${responseError}`);
   }
 };
+
+const buildRows = (selectedAPI, selectedFields = [], rawApiData = []) => {
+  try {
+    return rawApiData.map(row =>{
+      const values = [];
+      Object.keys(row.data.attributes).forEach(attribute => {
+        if(selectedFields.indexOf(attribute) !== -1){
+          values.push(row.data.attributes[attribute]);
+        } 
+      });
+      return {"values": values};
+    });
+  } catch (e){
+    console.error("error building rows from API results", e)
+    throw new Error("Building rows from API response failed");
+  }
+}
