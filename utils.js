@@ -1,5 +1,10 @@
 
-// takes in attributes object and builds fields
+/**
+ *
+ *
+ * @param {*} attributes
+ * @return {*} 
+ */
 const deriveSchema = (attributes) => {
   
   let fields = pcoConnector.getFields();
@@ -55,6 +60,13 @@ const deriveSchema = (attributes) => {
 };
 // running requests sync because this could be running in multiple data sources simultaneously
 // TODO investigate cache
+/**
+ *
+ *
+ * @param {*} selectedAPI
+ * @param {*} [options={}]
+ * @return {*} 
+ */
 const requestPCO = (selectedAPI, options = {}) => {
   // get the URL from the config and abort if not found
   const API = ENDPOINTS[selectedAPI];
@@ -141,7 +153,7 @@ const requestPCO = (selectedAPI, options = {}) => {
   }
 };
 
-const buildRows = (selectedAPI, selectedFields = [], rawApiData = []) => {
+const buildRows = (selectedFields = [], rawApiData = []) => {
   try {
     return rawApiData.map(row =>{
       const values = [];

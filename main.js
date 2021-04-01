@@ -3,10 +3,21 @@
 // const pcoConnector = DataStudioApp.createCommunityConnector();
 
 // TODO figure this out for non devs to return false
+/**
+ *
+ *
+ * @return {*} 
+ */
 function isAdminUser() {
   return true;
 }
 
+/**
+ *
+ *
+ * @param {*} request
+ * @return {*} 
+ */
 function getConfig(request) {
   try {
     let config = pcoConnector.getConfig();
@@ -65,6 +76,12 @@ function getConfig(request) {
   }
 }
 
+/**
+ *
+ *
+ * @param {*} request
+ * @return {*} 
+ */
 function getSchema(request){
   try {
     console.log("getSchema",request);
@@ -80,6 +97,12 @@ function getSchema(request){
   }
 };
 
+/**
+ *
+ *
+ * @param {*} request
+ * @return {*} 
+ */
 function getData(request){
   try {
     console.log("getData", request); 

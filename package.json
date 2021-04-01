@@ -1,0 +1,24 @@
+{
+  "name": "pco-connector",
+  "version": "1.0.0",
+  "description": "Connect PCO to Google Data Studio",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "gitTag": "git tag \"$npm_package_name\"_\"$npm_package_version\" && git push origin \"$npm_package_name\"_\"$npm_package_version\"",
+    "doc": "documentation build *.js -f md -o README.md --config documentation.yml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baycomfl/pco-connector.git"
+  },
+  "author": "Nathan Harris",
+  "license": "CC-BY-4.0",
+  "bugs": {
+    "url": "https://github.com/baycomfl/pco-connector/issues"
+  },
+  "homepage": "https://github.com/baycomfl/pco-connector#readme",
+  "devDependencies": {
+    "documentation": "13.2.0"
+  }
+}
