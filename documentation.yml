@@ -7,9 +7,25 @@ toc:
       * TODO License
   - name: Terms of Service
     description: |
-      * TODO TOS? 
-       
-  - name: Private Methods
+      * TODO TOS?      
+  - name: Main
     children:
-    - todo
+    - getConfig
+    - getData
+    - getSchema
+    - isAdminUser
+  - name: Auth
+    children:
+    - authCallback
+    - get3PAuthorizationUrls
+    - getAuthType
+    - getOAuthService
+    - isAuthValid
+    - resetAuth
+  - name: Utils
+    children:
+    - buildRows
+    - deriveSchema
+    - requestPCO
+
   

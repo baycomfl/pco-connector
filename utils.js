@@ -2,6 +2,30 @@
 /**
  *
  *
+ * @param {*} [selectedFields=[]]
+ * @param {*} [rawApiData=[]]
+ * @return {*} 
+ */
+ const buildRows = (selectedFields = [], rawApiData = []) => {
+  try {
+    return rawApiData.map(row =>{
+      const values = [];
+      Object.keys(row.data.attributes).forEach(attribute => {
+        if(selectedFields.indexOf(attribute) !== -1){
+          values.push(row.data.attributes[attribute]);
+        } 
+      });
+      return {"values": values};
+    });
+  } catch (e){
+    console.error("error building rows from API results", e)
+    throw new Error("Building rows from API response failed");
+  }
+}
+
+/**
+ *
+ *
  * @param {*} attributes
  * @return {*} 
  */
@@ -58,6 +82,8 @@ const deriveSchema = (attributes) => {
   });
   return fields;
 };
+
+
 // running requests sync because this could be running in multiple data sources simultaneously
 // TODO investigate cache
 /**
@@ -152,20 +178,3 @@ const requestPCO = (selectedAPI, options = {}) => {
     throw new Error(`HTTP code ${responseCode}: ${responseError}`);
   }
 };
-
-const buildRows = (selectedFields = [], rawApiData = []) => {
-  try {
-    return rawApiData.map(row =>{
-      const values = [];
-      Object.keys(row.data.attributes).forEach(attribute => {
-        if(selectedFields.indexOf(attribute) !== -1){
-          values.push(row.data.attributes[attribute]);
-        } 
-      });
-      return {"values": values};
-    });
-  } catch (e){
-    console.error("error building rows from API results", e)
-    throw new Error("Building rows from API response failed");
-  }
-}

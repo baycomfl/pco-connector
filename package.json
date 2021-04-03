@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "gitTag": "git tag \"$npm_package_name\"_\"$npm_package_version\" && git push origin \"$npm_package_name\"_\"$npm_package_version\"",
-    "doc": "documentation build *.js -f md -o README.md --config documentation.yml"
+    "doc": "rimraf README.md && documentation build *.js -f md -o README.md --config documentation.yml"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/baycomfl/pco-connector#readme",
   "devDependencies": {
-    "documentation": "13.2.0"
+    "documentation": "13.2.0",
+    "rimraf": "3.0.2"
   }
 }
