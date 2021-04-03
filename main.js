@@ -9,7 +9,11 @@
  * @return {*} 
  */
 function isAdminUser() {
-  return true;
+  if(ADMINS.indexOf(Session.getEffectiveUser().getEmail() !== -1)){
+    console.warn();
+    return true;
+  }
+  return false;
 }
 
 /**
