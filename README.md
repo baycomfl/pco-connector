@@ -51,11 +51,16 @@
 
 ### getConfig
 
+-   **See: [https://developers.google.com/datastudio/connector/reference#getconfig][27]
+    **
+
+Returns the user configurable options for the connector.
+
 #### Parameters
 
--   `request` **any** 
+-   `request` **[object][28]** A JavaScript object containing the config request parameters.
 
-Returns **any** 
+Returns **[object][28]** A JavaScript object representing the config for the given request.
 
 ### getData
 
@@ -75,7 +80,7 @@ Returns **any**
 
 ### isAdminUser
 
-Returns **any** 
+Returns **[boolean][29]** 
 
 ## Auth
 
@@ -88,24 +93,24 @@ The OAuth callback.
 
 #### Parameters
 
--   `request` **[object][27]** The request data received from the OAuth flow.
+-   `request` **[object][28]** The request data received from the OAuth flow.
 
 Returns **HtmlOutput** The HTML output to show to the user.
 
 ### get3PAuthorizationUrls
 
--   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][28]
+-   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][30]
     **
 
 Gets the 3P authorization URL.
 
-Returns **[string][29]** The authorization URL.
+Returns **[string][31]** The authorization URL.
 
 ### getAuthType
 
 Returns the Auth Type of this connector.
 
-Returns **[object][27]** The Auth type.
+Returns **[object][28]** The Auth type.
 
 ### getOAuthService
 
@@ -117,7 +122,7 @@ Returns **Service** The OAuth Service
 
 Returns true if the auth service has access.
 
-Returns **[boolean][30]** True if the auth service has access.
+Returns **[boolean][29]** True if the auth service has access.
 
 ### resetAuth
 
@@ -206,10 +211,12 @@ Returns **any**
 
 [26]: #parameters-6
 
-[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[27]: https://developers.google.com/datastudio/connector/reference#getconfig
 
-[28]: https://developers.google.com/apps-script/reference/script/authorization-info
+[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[30]: https://developers.google.com/apps-script/reference/script/authorization-info
+
+[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String

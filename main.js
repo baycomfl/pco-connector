@@ -2,7 +2,6 @@
 // connector declared in auth.gs
 // const pcoConnector = DataStudioApp.createCommunityConnector();
 
-// TODO figure this out for non devs to return false
 /**
  *
  *
@@ -10,7 +9,7 @@
  */
 function isAdminUser() {
   if(ADMINS.indexOf(Session.getEffectiveUser().getEmail() !== -1)){
-    console.warn();
+    console.warn("admin user");
     return true;
   }
   return false;
