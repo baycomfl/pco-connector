@@ -7,11 +7,16 @@
  */
  const buildRows = (selectedFields = [], rawApiData = []) => {
   try {
-    return rawApiData.map(row =>{
+    // flatten this in case we get back and array of objects, or just a single object that is not in an array.
+    return rawApiData.reduce((acc, curr) =>{
+      return acc.concat(acc, curr.data);
+    }, [])
+    // filter the response to just the selected attributes.
+    .map(row =>{
       const values = [];
-      Object.keys(row.data.attributes).forEach(attribute => {
+      Object.keys(row.attributes).forEach(attribute => {
         if(selectedFields.indexOf(attribute) !== -1){
-          values.push(row.data.attributes[attribute]);
+          values.push(row.attributes[attribute]);
         } 
       });
       return {"values": values};
@@ -93,6 +98,7 @@ const deriveSchema = (attributes) => {
  * @return {*} 
  */
 const requestPCO = (selectedAPI, options = {}) => {
+  // console.warn("REQUEST PCO CALLED", selectedAPI, JSON.stringify(options));
   // get the URL from the config and abort if not found
   const API = ENDPOINTS[selectedAPI];
   if(typeof API === "undefined"){
@@ -140,12 +146,19 @@ const requestPCO = (selectedAPI, options = {}) => {
   if(!options.hasOwnProperty("muteHttpExceptions") || typeof options.muteHttpExceptions !== "boolean"){
     options.muteHttpExceptions = true;
   }
-  
+  // console.log("OPTIOSN", JSON.stringify(options));
   const response = UrlFetchApp.fetch(url, options);
   const responsePayload = JSON.parse(response.getContentText());
   const responseHeaders = response.getAllHeaders();
   let responseCode = response.getResponseCode();
-  if(responseCode === ENDPOINTS[selectedAPI].statusCode){
+  if([ENDPOINTS[selectedAPI].status_code, 429].indexOf(responseCode) >= 0){
+    if(responseCode === 429 && responseHeaders.hasOwnProperty("Retry-After")){
+      console.warn("rate limiter applied. retry after: ",parseInt(responseHeaders["Retry-After"],10) * 1000);
+      Utilities.sleep(parseInt(responseHeaders["Retry-After"],10) * 1000);///default this...
+      responsePayload.data = [];
+      const nextResponse = requestPCO(selectedAPI, options);
+      responsePayload.data = responsePayload.data.concat(responsePayload.data, nextResponse.data);
+    } 
     if(options.aggregate) {
       if(
         responsePayload.hasOwnProperty("meta") &&
@@ -159,13 +172,8 @@ const requestPCO = (selectedAPI, options = {}) => {
         const nextResponse = requestPCO(selectedAPI, options);
         responsePayload.data = responsePayload.data.concat(responsePayload.data, nextResponse.data);
       }
-      return responsePayload;
-    } else {
-      return responsePayload;
-    }
-  } else if (responseCode === 429 && responseHeaders.hasOwnProperty("Retry-After")){
-    Utilities.sleep(parseInt(responseHeaders["Retry-After"],10) * 1000);
-    return requestPCO(selectedAPI, options);
+    } 
+    return responsePayload;
   } else {
     // make this a little easier to read
     let responseError = response;

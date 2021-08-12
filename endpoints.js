@@ -1,4 +1,26 @@
 const ENDPOINTS = {
+  "check-ins": {
+    "attributes": {
+      "checked_out_at": "timestamp",
+      "created_at": "timestamp",
+      "emergency_contact_name": "string",
+      "emergency_contact_phone_number": "string",
+      "first_name": "string",
+      "kind": "string",
+      "last_name": "string",
+      "medical_notes": "string",
+      "number": "int",
+      "security_code": "string",
+      "updated_at": "timestamp"
+    },
+    "label": "Check-ins",
+    "url": "https://api.planningcenteronline.com/check-ins/v2/check_ins",
+    "per_page": 100,
+    "status_code": 200,
+    "date_range_required": true,
+    "start_date_param": "where[created_at][gte]",
+    "end_date_param": "where[created_at][lte]"
+  },
   "lists": {
     "attributes": {
       "auto_refresh": "boolean",
@@ -24,7 +46,10 @@ const ENDPOINTS = {
     "label": "Lists",
     "url": "https://api.planningcenteronline.com/people/v2/lists",
     "per_page": 100,
-    "statusCode": 200
+    "status_code": 200,
+    "date_range_required": false,
+    "start_date_param": "where[created_at][gte]",
+    "end_date_param": "where[created_at][lte]"
   },
   "events": {
     "attributes": {
@@ -41,6 +66,9 @@ const ENDPOINTS = {
     "label": "Events",
     "url": "https://api.planningcenteronline.com/check-ins/v2/events",
     "per_page": 100,
-    "statusCode": 200
+    "status_code": 200,
+    "date_range_required": false,
+    "start_date_param": "where[created_at][gte]",
+    "end_date_param": "where[created_at][lte]"
   }
 }; 

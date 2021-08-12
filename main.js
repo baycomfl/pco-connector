@@ -41,34 +41,38 @@ function getConfig(request) {
     });
     
     if(!isFirstRequest){
-      let pickList = config.newSelectMultiple()
-        .setId("selectedItems")
-        .setName("Select Your Items")
-        .setHelpText("Select the PCO items to import.")
-      const response = requestPCO(configParams.selectedAPI, {"aggregate": true});
-      response.data.forEach(item => {
-        pickList.addOption(
-          config.newOptionBuilder()
-          .setLabel(
-            item.attributes.name === null 
-            ? (
-                item.attributes.description.length > 50 
-                  ? item.attributes.description.replace(/(.{47})..+/, "$1…")
-                  : item.attributes.description
-              )
-            : (
-                item.attributes.name.length > 50
-                  ? item.attributes.name.replace(/(.{47})..+/, "$1…")
-                  : item.attributes.name
-              )
+      if(ENDPOINTS[configParams.selectedAPI].date_range_required){
+        config.setDateRangeRequired(true);
+      } else {
+        let pickList = config.newSelectMultiple()
+          .setId("selectedItems")
+          .setName("Select Your Items")
+          .setHelpText("Select the PCO items to import.");
+        const response = requestPCO(configParams.selectedAPI, {aggregate: true});
+        response.data.forEach(item => {
+          pickList.addOption(
+            config.newOptionBuilder()
+            .setLabel(
+              item.attributes.name === null 
+              ? (
+                  item.attributes.description.length > 50 
+                    ? item.attributes.description.replace(/(.{47})..+/, "$1…")
+                    : item.attributes.description
+                )
+              : (
+                  item.attributes.name.length > 50
+                    ? item.attributes.name.replace(/(.{47})..+/, "$1…")
+                    : item.attributes.name
+                )
+            )
+            .setValue(item.id)
           )
-          .setValue(item.id)
-        )
-      });
-       config.setIsSteppedConfig(false);
-    }     
-     
-    return config.build()
+        }); 
+    }
+      config.setIsSteppedConfig(false);
+    }
+           
+    return config.build();
     
   } catch (e) {
     console.error(e);
@@ -115,9 +119,26 @@ function getData(request){
     const requestedFields = fields.forIds(requestedFieldIds);
     const schema = requestedFields.build();
     const apiResponses = [];
-    request.configParams.selectedItems.split(",").forEach(item =>{
-      apiResponses.push(requestPCO(selectedAPI, {"rest_params": [item]}));
-    });
+    const options = {
+      "aggregate": true,
+      "qs": {}
+    };
+    if(typeof request.dateRange !== "undefined"){
+      if (typeof request.dateRange.startDate){
+        options.qs[ENDPOINTS[selectedAPI].start_date_param] = request.dateRange.startDate;
+      }
+      if (typeof request.dateRange.endDate){
+        options.qs[ENDPOINTS[selectedAPI].end_date_param] = request.dateRange.endDate;
+      }
+    }
+    if(typeof request.configParams.selectedItems !== "undefined"){
+      request.configParams.selectedItems.split(",").forEach(item =>{
+        options["rest_params"] = [item];
+        apiResponses.push(requestPCO(selectedAPI, options));
+      });
+    } else {
+      apiResponses.push(requestPCO(selectedAPI, options));
+    }
     const rows = buildRows(requestedFieldIds, apiResponses);
     return {
       "schema": schema,
