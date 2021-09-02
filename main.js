@@ -92,9 +92,8 @@ function getConfig(request) {
 function getSchema(request){
   try {
     console.log("getSchema",request);
-    const fields = deriveSchema(ENDPOINTS[request.configParams.selectedAPI].attributes);
+    const fields = deriveSchema(ENDPOINTS[request.configParams.selectedAPI]);
     return { 'schema': fields.build() };
-
   } catch (e) {
     console.error("getSchema() error: ", e.hasOwnProperty("message") ? e.message : e);
     pcoConnector.newUserError()
@@ -113,6 +112,7 @@ function getSchema(request){
 function getData(request){
   try {
     console.log("getData", request); 
+    request.dateRange ={ startDate: '2021-08-04', endDate: '2021-08-12' }
     let requestedFieldIds = request.fields.map(field => {return field.name;});
     const selectedAPI = request.configParams.selectedAPI;
     const fields = deriveSchema(ENDPOINTS[selectedAPI].attributes);
@@ -139,7 +139,7 @@ function getData(request){
     } else {
       apiResponses.push(requestPCO(selectedAPI, options));
     }
-    const rows = buildRows(requestedFieldIds, apiResponses);
+    const rows = buildRows(requestedFieldIds, apiResponses, selectedAPI);
     return {
       "schema": schema,
       "rows": rows

@@ -5,7 +5,15 @@
  * @param {*} [rawApiData=[]]
  * @return {*} 
  */
- const buildRows = (selectedFields = [], rawApiData = []) => {
+ const buildRows = (selectedFields = [], rawApiData = [], selectedAPI) => {
+   const formatTimeStamp = (isoTimeStamp) => {
+     console.error("isoTimeStamp", isoTimeStamp);
+     return isoTimeStamp
+       .split("") // cut chars into array
+       .map(elem => parseInt(elem)) // cast strings to numbers
+       .filter(elem => typeof elem === "number" && (elem === 0 || elem)) // filter out NaN
+       .join("");
+   };
   try {
     // flatten this in case we get back and array of objects, or just a single object that is not in an array.
     return rawApiData.reduce((acc, curr) =>{
@@ -16,7 +24,12 @@
       const values = [];
       Object.keys(row.attributes).forEach(attribute => {
         if(selectedFields.indexOf(attribute) !== -1){
-          values.push(row.attributes[attribute]);
+          let formattedAttribute = row.attributes[attribute];
+          if(ENDPOINTS[selectedAPI].attributes[attribute] === "timestamp"){
+            formattedAttribute = formatTimeStamp(formattedAttribute);
+            console.warn("formattedAttribute", formattedAttribute);
+          }  
+          values.push(formattedAttribute);
         } 
       });
       return {"values": values};
@@ -33,14 +46,14 @@
  * @param {*} attributes
  * @return {*} 
  */
-const deriveSchema = (attributes) => {
-  
+const deriveSchema = (selectedApiConfig) => {
+  const attributes = selectedApiConfig.attributes;
   let fields = pcoConnector.getFields();
   var types = pcoConnector.FieldType;
 
   Object.keys(attributes).forEach((prop) => {
     // Set fields based on data type
-    var field;
+    let field;
     switch (attributes[prop]) {
       case 'boolean':
         field = fields
@@ -83,10 +96,25 @@ const deriveSchema = (attributes) => {
       default:
         return;
     }
+    // set the default dimension and metric if specified
+    if(
+      typeof selectedApiConfig.default_dimension !== undefined &&
+      selectedApiConfig.default_dimension === prop
+    ){
+      fields.setDefaultDimension(field.getId());
+    }
+    // could default metric and dimension be the same prop?
+    // if not this should be an else if
+    if(
+      typeof selectedApiConfig.default_metric !== undefined &&
+      selectedApiConfig.default_metric === prop
+    ){
+      fields.setDefaultMetric(field.getId());
+    }
   });
+  
   return fields;
 };
-
 
 // running requests sync because this could be running in multiple data sources simultaneously
 // TODO investigate cache

@@ -39,7 +39,7 @@ function getOAuthService() {
     .setClientSecret(SECRET)
     .setPropertyStore(PropertiesService.getUserProperties())
     .setCallbackFunction('authCallback')
-    .setScope('people check_ins');
+    .setScope('people check_ins groups services giving');
 };
 
 /**

@@ -19,7 +19,34 @@ const ENDPOINTS = {
     "status_code": 200,
     "date_range_required": true,
     "start_date_param": "where[created_at][gte]",
-    "end_date_param": "where[created_at][lte]"
+    "end_date_param": "where[created_at][lte]",
+    "default_dimension": "last_name"
+  },
+  "groups": {
+    "attributes": {
+      "archived_at": "timestamp",
+      "contact_email": "string",
+      "created_at": "timestamp",
+      "description": "string",
+      "enrollment_open": "boolean",
+      "enrollment_strategy": "string",
+      "events_visibility": "string",
+      "header_image": "string",
+      "location_type_preference": "string",
+      "memberships_count": 1,
+      "name": "string",
+      "public_church_center_web_url": "string",
+      "schedule": "string",
+      "virtual_location_url": "string",
+    },
+    "label": "Groups",
+    "url": "https://api.planningcenteronline.com/groups/v2/groups",
+    "per_page": 100,
+    "status_code": 200,
+    "date_range_required": true,
+    "start_date_param": "where[created_at][gte]",
+    "end_date_param": "where[created_at][lte]",
+    "default_dimension": "name"
   },
   "lists": {
     "attributes": {
@@ -47,9 +74,10 @@ const ENDPOINTS = {
     "url": "https://api.planningcenteronline.com/people/v2/lists",
     "per_page": 100,
     "status_code": 200,
-    "date_range_required": false,
+    "date_range_required": true,
     "start_date_param": "where[created_at][gte]",
-    "end_date_param": "where[created_at][lte]"
+    "end_date_param": "where[created_at][lte]",
+    "default_dimension": "name"
   },
   "events": {
     "attributes": {
@@ -67,8 +95,36 @@ const ENDPOINTS = {
     "url": "https://api.planningcenteronline.com/check-ins/v2/events",
     "per_page": 100,
     "status_code": 200,
-    "date_range_required": false,
+    "date_range_required": true,
     "start_date_param": "where[created_at][gte]",
-    "end_date_param": "where[created_at][lte]"
+    "end_date_param": "where[created_at][lte]",
+    "default_dimension": "name"
+  },
+  "service_teams": {
+    "attributes": {
+      "name": "string",
+      "rehearsal_team": "boolean",
+      "sequence": "int",
+      "schedule_to": "string",
+      "default_status": "string",
+      "default_prepare_notifications": "boolean",
+      "created_at": "timestamp",
+      "updated_at": "timestamp",
+      "archived_at": "timestamp",
+      "assigned_directly": "boolean",
+      "secure_team": "boolean",
+      "last_plan_from": "string",
+      "stage_color": "string",
+      "stage_variant": "string"
+    },
+    "label": "Service Teams",
+    "url": "https://api.planningcenteronline.com/services/v2/teams",
+    "per_page": 100,
+    "status_code": 200,
+    "date_range_required": true,
+    "start_date_param": "where[created_at][gte]",
+    "end_date_param": "where[created_at][lte]",
+    "default_dimension": "name"
+    
   }
 }; 
