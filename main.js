@@ -22,13 +22,18 @@ function isAdminUser() {
  * @return {*} 
  */
 function getConfig(request) {
+  // Am I drunk? Nope. This is how Google makes you do this.
+  // This function gets called over and over as the user moves through the options
+  // Instead of exposing a way to pass previous selections to the the next call
+  // You have this abomination :)
   try {
-    let config = pcoConnector.getConfig();
-    let configParams = request.configParams;
+    const config = pcoConnector.getConfig();
+    const configParams = request.configParams;
     const isFirstRequest = configParams === undefined;
-    if (isFirstRequest) {
+    if(isFirstRequest){
       config.setIsSteppedConfig(true);
     }
+    
     let source = config
       .newSelectSingle()
       .setId('selectedAPI')
@@ -37,43 +42,64 @@ function getConfig(request) {
       .setHelpText('Select the PCO data source.')
       .setAllowOverride(true);
     Object.keys(ENDPOINTS).forEach(endpoint =>{
-      source.addOption(config.newOptionBuilder().setLabel(ENDPOINTS[endpoint].label).setValue(endpoint))
+      source.addOption(config.newOptionBuilder().setLabel(ENDPOINTS[endpoint].label).setValue(endpoint));
     });
-    
+
     if(!isFirstRequest){
-      if(ENDPOINTS[configParams.selectedAPI].date_range_required){
-        config.setDateRangeRequired(true);
-      } else {
-        let pickList = config.newSelectMultiple()
-          .setId("selectedItems")
-          .setName("Select Your Items")
-          .setHelpText("Select the PCO items to import.");
-        const response = requestPCO(configParams.selectedAPI, {aggregate: true});
-        response.data.forEach(item => {
-          pickList.addOption(
-            config.newOptionBuilder()
-            .setLabel(
-              item.attributes.name === null 
-              ? (
-                  item.attributes.description.length > 50 
-                    ? item.attributes.description.replace(/(.{47})..+/, "$1…")
-                    : item.attributes.description
+      if (configParams.selectedAPI === undefined) {
+        pcoConnector.newUserError().setText('You must choose a data source to continue.').throwException();
+      }
+
+      switch (ENDPOINTS[configParams.selectedAPI].date_range_required) {
+        case true: {
+          config.setDateRangeRequired(true);
+          config.setIsSteppedConfig(false);
+          break;
+        }
+        case false: {
+          config.setIsSteppedConfig(true);
+          config.newCheckbox()
+            .setId('selectMultiple')
+            .setName('Select Individual Items')
+            .setHelpText('If checked you can select a subset of items to add to Data Studio');
+          break;
+        }
+      }
+      console.log("!!!!configParams", configParams);
+      if (configParams.selectMultiple === "true") {
+            config.setIsSteppedConfig(false);
+            let pickList = config.newSelectMultiple()
+              .setId("selectedItems")
+              .setName("Select Your Items")
+              .setHelpText("Select the PCO items to import.");
+              console.log("!!!!configParams", configParams);
+            const response = requestPCO(configParams.selectedAPI, {aggregate: true});
+                          console.log("!!!!gt here");
+
+            response.data.forEach(item => {
+              pickList.addOption(
+                config.newOptionBuilder()
+                  .setLabel(
+                    item.attributes.name === null 
+                    ? (
+                      item.attributes.description.length > 50 
+                        ? item.attributes.description.replace(/(.{47})..+/, "$1…")
+                        : item.attributes.description
+                    )
+                  : (
+                      item.attributes.name.length > 50
+                        ? item.attributes.name.replace(/(.{47})..+/, "$1…")
+                        : item.attributes.name
+                    )
                 )
-              : (
-                  item.attributes.name.length > 50
-                    ? item.attributes.name.replace(/(.{47})..+/, "$1…")
-                    : item.attributes.name
-                )
-            )
-            .setValue(item.id)
-          )
-        }); 
+                .setValue(item.id)
+              )
+            });
+          } 
+
     }
-      config.setIsSteppedConfig(false);
-    }
-           
-    return config.build();
     
+    return config.build();     
   } catch (e) {
     console.error(e);
     pcoConnector.newUserError()
@@ -112,10 +138,11 @@ function getSchema(request){
 function getData(request){
   try {
     console.log("getData", request); 
-    request.dateRange ={ startDate: '2021-08-04', endDate: '2021-08-12' }
+    // uncomment to reduce request size for debugging
+    //request.dateRange ={ startDate: '2021-08-04', endDate: '2021-08-12' }
     let requestedFieldIds = request.fields.map(field => {return field.name;});
     const selectedAPI = request.configParams.selectedAPI;
-    const fields = deriveSchema(ENDPOINTS[selectedAPI].attributes);
+    const fields = deriveSchema(ENDPOINTS[selectedAPI]);
     const requestedFields = fields.forIds(requestedFieldIds);
     const schema = requestedFields.build();
     const apiResponses = [];
@@ -131,6 +158,7 @@ function getData(request){
         options.qs[ENDPOINTS[selectedAPI].end_date_param] = request.dateRange.endDate;
       }
     }
+
     if(typeof request.configParams.selectedItems !== "undefined"){
       request.configParams.selectedItems.split(",").forEach(item =>{
         options["rest_params"] = [item];
@@ -139,7 +167,9 @@ function getData(request){
     } else {
       apiResponses.push(requestPCO(selectedAPI, options));
     }
+              
     const rows = buildRows(requestedFieldIds, apiResponses, selectedAPI);
+
     return {
       "schema": schema,
       "rows": rows

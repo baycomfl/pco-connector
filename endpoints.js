@@ -43,7 +43,7 @@ const ENDPOINTS = {
     "url": "https://api.planningcenteronline.com/groups/v2/groups",
     "per_page": 100,
     "status_code": 200,
-    "date_range_required": true,
+    "date_range_required": false,
     "start_date_param": "where[created_at][gte]",
     "end_date_param": "where[created_at][lte]",
     "default_dimension": "name"
@@ -121,7 +121,7 @@ const ENDPOINTS = {
     "url": "https://api.planningcenteronline.com/services/v2/teams",
     "per_page": 100,
     "status_code": 200,
-    "date_range_required": true,
+    "date_range_required": false,
     "start_date_param": "where[created_at][gte]",
     "end_date_param": "where[created_at][lte]",
     "default_dimension": "name"

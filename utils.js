@@ -126,7 +126,7 @@ const deriveSchema = (selectedApiConfig) => {
  * @return {*} 
  */
 const requestPCO = (selectedAPI, options = {}) => {
-  // console.warn("REQUEST PCO CALLED", selectedAPI, JSON.stringify(options));
+   console.warn("REQUEST PCO CALLED", selectedAPI, JSON.stringify(options));
   // get the URL from the config and abort if not found
   const API = ENDPOINTS[selectedAPI];
   if(typeof API === "undefined"){
@@ -166,16 +166,24 @@ const requestPCO = (selectedAPI, options = {}) => {
   if(!options.hasOwnProperty("headers")){
     options.headers = {};
   }
+  console.log("got here!!!")
+  console.log("got here 2!!!",getOAuthService().getAccessToken());
+    console.log("got here 3!!!", options.headers.Authorization);
+
   if(!options.headers.hasOwnProperty("Authorization")){
     options.headers.Authorization = `Bearer ${getOAuthService().getAccessToken()}`;
   }
+    console.log("got here 4!!!", options.headers.Authorization);
 
   // handle retries, etc but allow caller to override. 
   if(!options.hasOwnProperty("muteHttpExceptions") || typeof options.muteHttpExceptions !== "boolean"){
     options.muteHttpExceptions = true;
   }
-  // console.log("OPTIOSN", JSON.stringify(options));
+      console.log("got here 5!!!", options);
+
   const response = UrlFetchApp.fetch(url, options);
+        console.log("got here 6!!!", response);
+
   const responsePayload = JSON.parse(response.getContentText());
   const responseHeaders = response.getAllHeaders();
   let responseCode = response.getResponseCode();
