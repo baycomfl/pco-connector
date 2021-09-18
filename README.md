@@ -26,8 +26,10 @@
         -   [Parameters][22]
     -   [deriveSchema][23]
         -   [Parameters][24]
-    -   [requestPCO][25]
+    -   [filterUserDefinedParams][25]
         -   [Parameters][26]
+    -   [requestPCO][27]
+        -   [Parameters][28]
 
 ## Usage
 
@@ -51,36 +53,48 @@
 
 ### getConfig
 
--   **See: [https://developers.google.com/datastudio/connector/reference#getconfig][27]
+-   **See: [https://developers.google.com/datastudio/connector/reference#getconfig][29]
     **
 
-Returns the user configurable options for the connector.
+Data Studio getConfig
 
 #### Parameters
 
--   `request` **[object][28]** A JavaScript object containing the config request parameters.
+-   `request` **[object][30]** A JavaScript object containing the config request parameters.
 
-Returns **[object][28]** A JavaScript object representing the config for the given request.
+Returns **[undefined][31]** 
 
 ### getData
 
+-   **See: [https://developers.google.com/datastudio/connector/reference#getdata][32]
+    **
+
+Returns the tabular data for the given request.
+
 #### Parameters
 
--   `request` **any** 
+-   `request` **[object][30]** @param {Object} A JavaScript object containing the data request parameters.
 
-Returns **any** 
+Returns **[undefined][31]** 
 
 ### getSchema
 
+-   **See: [https://developers.google.com/datastudio/connector/reference#getschema][33]
+    **
+
+Returns the schema for the given request. This provides the information about how the connector's data is organized.
+
 #### Parameters
 
--   `request` **any** 
+-   `request` **[object][30]** A JavaScript object containing the schema request parameters.
 
-Returns **any** 
+Returns **[undefined][31]** 
 
 ### isAdminUser
 
-Returns **[boolean][29]** 
+Determines if current user is an admin
+
+Returns **[boolean][34]** 
 
 ## Auth
 
@@ -93,24 +107,24 @@ The OAuth callback.
 
 #### Parameters
 
--   `request` **[object][28]** The request data received from the OAuth flow.
+-   `request` **[object][30]** The request data received from the OAuth flow.
 
 Returns **HtmlOutput** The HTML output to show to the user.
 
 ### get3PAuthorizationUrls
 
--   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][30]
+-   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][35]
     **
 
 Gets the 3P authorization URL.
 
-Returns **[string][31]** The authorization URL.
+Returns **[string][36]** The authorization URL.
 
 ### getAuthType
 
 Returns the Auth Type of this connector.
 
-Returns **[object][28]** The Auth type.
+Returns **[object][30]** The Auth type.
 
 ### getOAuthService
 
@@ -122,7 +136,7 @@ Returns **Service** The OAuth Service
 
 Returns true if the auth service has access.
 
-Returns **[boolean][29]** True if the auth service has access.
+Returns **[boolean][34]** True if the auth service has access.
 
 ### resetAuth
 
@@ -135,29 +149,46 @@ Resets the auth service.
 
 ### buildRows
 
+Fileters and formats raw data from PCO into structure required by Data Studio
+
 #### Parameters
 
--   `selectedFields` **any**  (optional, default `[]`)
--   `rawApiData` **any**  (optional, default `[]`)
+-   `selectedFields` **[array][37]** attributes user selected to display (optional, default `[]`)
+-   `rawApiData` **[array][37]** raw responses from PCO API (optional, default `[]`)
+-   `selectedAPI`  
 
-Returns **any** 
+Returns **[array][37]** array of row objects
 
 ### deriveSchema
 
+Creates schema for the selected API
+
 #### Parameters
 
--   `attributes` **any** 
+-   `selectedApiConfig` **[object][30]** config object for selected API
 
-Returns **any** 
+Returns **[object][30]** Data Studio fields
+
+### filterUserDefinedParams
+
+request.configParams filter for user specified parameters
+
+#### Parameters
+
+-   `configParams` **any** request.configParams (optional, default `{}`)
+
+Returns **[object][30]** user defined parameters
 
 ### requestPCO
 
+Recursive function that fetches API data from PCO
+
 #### Parameters
 
--   `selectedAPI` **any** 
--   `options` **any**  (optional, default `{}`)
+-   `selectedAPI` **[string][36]** selected API
+-   `options` **[object][30]** fetch options (optional, default `{}`)
 
-Returns **any** 
+Returns **[array][37]** array of API data objects
 
 [1]: #usage
 
@@ -207,16 +238,28 @@ Returns **any**
 
 [24]: #parameters-5
 
-[25]: #requestpco
+[25]: #filteruserdefinedparams
 
 [26]: #parameters-6
 
-[27]: https://developers.google.com/datastudio/connector/reference#getconfig
+[27]: #requestpco
 
-[28]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[28]: #parameters-7
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[29]: https://developers.google.com/datastudio/connector/reference#getconfig
 
-[30]: https://developers.google.com/apps-script/reference/script/authorization-info
+[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+
+[32]: https://developers.google.com/datastudio/connector/reference#getdata
+
+[33]: https://developers.google.com/datastudio/connector/reference#getschema
+
+[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[35]: https://developers.google.com/apps-script/reference/script/authorization-info
+
+[36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array

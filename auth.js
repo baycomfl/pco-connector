@@ -6,7 +6,8 @@ let pcoConnector = DataStudioApp.createCommunityConnector();
  * @return {object} The Auth type.
  */
 function getAuthType() {
-  return pcoConnector.newAuthTypeResponse()
+  return pcoConnector
+    .newAuthTypeResponse()
     .setAuthType(pcoConnector.AuthType.OAUTH2)
     .build();
 }
@@ -17,7 +18,6 @@ function getAuthType() {
 function resetAuth() {
   getOAuthService().reset();
 }
-
 
 /**
  * Returns true if the auth service has access.
@@ -32,15 +32,17 @@ function isAuthValid() {
  * @return {Service} The OAuth Service
  */
 function getOAuthService() {
-  return OAuth2.createService('pcoAuthService')
-    .setAuthorizationBaseUrl('https://api.planningcenteronline.com/oauth/authorize')
-    .setTokenUrl('https://api.planningcenteronline.com/oauth/token')
+  return OAuth2.createService("pcoAuthService")
+    .setAuthorizationBaseUrl(
+      "https://api.planningcenteronline.com/oauth/authorize"
+    )
+    .setTokenUrl("https://api.planningcenteronline.com/oauth/token")
     .setClientId(CLIENT_ID)
     .setClientSecret(SECRET)
     .setPropertyStore(PropertiesService.getUserProperties())
-    .setCallbackFunction('authCallback')
-    .setScope('people check_ins groups services giving');
-};
+    .setCallbackFunction("authCallback")
+    .setScope("people check_ins groups services giving");
+}
 
 /**
  * The OAuth callback.
@@ -50,11 +52,13 @@ function getOAuthService() {
 function authCallback(request) {
   var authorized = getOAuthService().handleCallback(request);
   if (authorized) {
-    return HtmlService.createHtmlOutput('Success! You can close this tab.');
+    return HtmlService.createHtmlOutput("Success! You can close this tab.");
   } else {
-    return HtmlService.createHtmlOutput('Denied. Please close this tab and try again.');
-  };
-};
+    return HtmlService.createHtmlOutput(
+      "Denied. Please close this tab and try again."
+    );
+  }
+}
 
 /**
  * Gets the 3P authorization URL.
@@ -64,4 +68,3 @@ function authCallback(request) {
 function get3PAuthorizationUrls() {
   return getOAuthService().getAuthorizationUrl();
 }
-
