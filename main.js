@@ -24,8 +24,8 @@ function isAdminUser() {
 function getConfig(request) {
   // Am I drunk? Nope. This is how Google makes you do this.
   // This function gets called over and over as the user moves through the options
-  // Instead of exposing a way to pass previous selections to the the next call
-  // You have this abomination :)
+  // Instead of exposing a way to pass previous selections to the the next call, you have this abomination :)
+  // Also there is no way to set default options
   try {
     const config = pcoConnector.getConfig();
     const configParams = request.configParams;
@@ -61,6 +61,7 @@ function getConfig(request) {
           config.newCheckbox()
             .setId('selectMultiple')
             .setName('Select Individual Items')
+            .setIsDynamic(true)
             .setHelpText('If checked you can select a subset of items to add to Data Studio');
           break;
         }
@@ -71,10 +72,10 @@ function getConfig(request) {
             let pickList = config.newSelectMultiple()
               .setId("selectedItems")
               .setName("Select Your Items")
+              .setIsDynamic(true)
               .setHelpText("Select the PCO items to import.");
               console.log("!!!!configParams", configParams);
             const response = requestPCO(configParams.selectedAPI, {aggregate: true});
-                          console.log("!!!!gt here");
 
             response.data.forEach(item => {
               pickList.addOption(
@@ -95,8 +96,13 @@ function getConfig(request) {
                 .setValue(item.id)
               )
             });
-          } 
-
+          } else {
+            // this is a work around because you can't default the value of the checkbox
+            // the empty config element allows UI to present the "connect" button.
+            config.newInfo().setId('ready');
+            config.setDateRangeRequired(true);
+            config.setIsSteppedConfig(false);
+          }
     }
     
     return config.build();     
