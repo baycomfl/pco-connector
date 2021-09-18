@@ -116,6 +116,18 @@ const deriveSchema = (selectedApiConfig) => {
   return fields;
 };
 
+const filterUserDefinedParams = (configParams = {}) => {
+  // to avoid name collisions and errors related to reserved param names
+  // all user speficied parameters must begin with "pco_" prefix
+  // filter out everything that does not satisfy this requriement
+  return Object.keys(configParams).reduce((acc, curr) => {
+    if(typeof configParams[curr] === "string" && typeof curr.split("_")[1] !== "undefined"){
+      acc[curr.split("_")[1]] = configParams[curr];
+    }
+    return acc;
+  }, {});
+}
+
 // running requests sync because this could be running in multiple data sources simultaneously
 // TODO investigate cache
 /**
@@ -166,30 +178,24 @@ const requestPCO = (selectedAPI, options = {}) => {
   if(!options.hasOwnProperty("headers")){
     options.headers = {};
   }
-  console.log("got here!!!")
-  console.log("got here 2!!!",getOAuthService().getAccessToken());
-    console.log("got here 3!!!", options.headers.Authorization);
 
   if(!options.headers.hasOwnProperty("Authorization")){
     options.headers.Authorization = `Bearer ${getOAuthService().getAccessToken()}`;
   }
-    console.log("got here 4!!!", options.headers.Authorization);
 
   // handle retries, etc but allow caller to override. 
   if(!options.hasOwnProperty("muteHttpExceptions") || typeof options.muteHttpExceptions !== "boolean"){
     options.muteHttpExceptions = true;
   }
-      console.log("got here 5!!!", options);
 
   const response = UrlFetchApp.fetch(url, options);
-        console.log("got here 6!!!", response);
 
   const responsePayload = JSON.parse(response.getContentText());
   const responseHeaders = response.getAllHeaders();
   let responseCode = response.getResponseCode();
   if([ENDPOINTS[selectedAPI].status_code, 429].indexOf(responseCode) >= 0){
     if(responseCode === 429 && responseHeaders.hasOwnProperty("Retry-After")){
-      console.warn("rate limiter applied. retry after: ",parseInt(responseHeaders["Retry-After"],10) * 1000);
+      console.warn("rate limiter applied. retry after: ", parseInt(responseHeaders["Retry-After"],10) * 1000);
       Utilities.sleep(parseInt(responseHeaders["Retry-After"],10) * 1000);///default this...
       responsePayload.data = [];
       const nextResponse = requestPCO(selectedAPI, options);

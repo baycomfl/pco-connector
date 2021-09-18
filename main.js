@@ -22,7 +22,6 @@ function isAdminUser() {
  * @return {*} 
  */
 function getConfig(request) {
-  // Am I drunk? Nope. This is how Google makes you do this.
   // This function gets called over and over as the user moves through the options
   // Instead of exposing a way to pass previous selections to the the next call, you have this abomination :)
   // Also there is no way to set default options
@@ -66,7 +65,6 @@ function getConfig(request) {
           break;
         }
       }
-      console.log("!!!!configParams", configParams);
       if (configParams.selectMultiple === "true") {
             config.setIsSteppedConfig(false);
             let pickList = config.newSelectMultiple()
@@ -74,7 +72,6 @@ function getConfig(request) {
               .setName("Select Your Items")
               .setIsDynamic(true)
               .setHelpText("Select the PCO items to import.");
-              console.log("!!!!configParams", configParams);
             const response = requestPCO(configParams.selectedAPI, {aggregate: true});
 
             response.data.forEach(item => {
@@ -154,7 +151,7 @@ function getData(request){
     const apiResponses = [];
     const options = {
       "aggregate": true,
-      "qs": {}
+      "qs": filterUserDefinedParams(request.configParams)
     };
     if(typeof request.dateRange !== "undefined"){
       if (typeof request.dateRange.startDate){
