@@ -2,51 +2,47 @@
 
 ### Table of Contents
 
--   [Usage][1]
--   [License][2]
--   [Terms of Service][3]
--   [Main][4]
-    -   [getConfig][5]
-        -   [Parameters][6]
-    -   [getData][7]
-        -   [Parameters][8]
-    -   [getSchema][9]
-        -   [Parameters][10]
-    -   [isAdminUser][11]
--   [Auth][12]
-    -   [authCallback][13]
-        -   [Parameters][14]
-    -   [get3PAuthorizationUrls][15]
-    -   [getAuthType][16]
-    -   [getOAuthService][17]
-    -   [isAuthValid][18]
-    -   [resetAuth][19]
--   [Utils][20]
-    -   [buildRows][21]
-        -   [Parameters][22]
-    -   [deriveSchema][23]
-        -   [Parameters][24]
-    -   [filterUserDefinedParams][25]
-        -   [Parameters][26]
-    -   [requestPCO][27]
-        -   [Parameters][28]
+-   [License and Terms of Service][1]
+-   [Usage][2]
+-   [Code Reference][3]
+    -   [getConfig][4]
+        -   [Parameters][5]
+    -   [getData][6]
+        -   [Parameters][7]
+    -   [getSchema][8]
+        -   [Parameters][9]
+    -   [isAdminUser][10]
+-   [Auth][11]
+    -   [authCallback][12]
+        -   [Parameters][13]
+    -   [get3PAuthorizationUrls][14]
+    -   [getAuthType][15]
+    -   [getOAuthService][16]
+    -   [isAuthValid][17]
+    -   [resetAuth][18]
+-   [Utils][19]
+    -   [buildRows][20]
+        -   [Parameters][21]
+    -   [deriveSchema][22]
+        -   [Parameters][23]
+    -   [filterUserDefinedParams][24]
+        -   [Parameters][25]
+    -   [requestPCO][26]
+        -   [Parameters][27]
+
+## License and Terms of Service
+
+-   [https://creativecommons.org/licenses/by-sa/4.0/][28]
+
 
 ## Usage
 
--   TODO List Install and Setup.
+-   Planning Center Setup
+-   Google Apps Script Setup
+-   Using the connector      
 
 
-## License
-
--   TODO License
-
-
-## Terms of Service
-
--   TODO TOS?      
-
-
-## Main
+## Code Reference
 
 
 
@@ -56,17 +52,17 @@
 -   **See: [https://developers.google.com/datastudio/connector/reference#getconfig][29]
     **
 
-Data Studio getConfig
+Returns the user configurable options for the connector.
 
 #### Parameters
 
 -   `request` **[object][30]** A JavaScript object containing the config request parameters.
 
-Returns **[undefined][31]** 
+Returns **[object][30]** results from config.build()
 
 ### getData
 
--   **See: [https://developers.google.com/datastudio/connector/reference#getdata][32]
+-   **See: [https://developers.google.com/datastudio/connector/reference#getdata][31]
     **
 
 Returns the tabular data for the given request.
@@ -75,11 +71,11 @@ Returns the tabular data for the given request.
 
 -   `request` **[object][30]** @param {Object} A JavaScript object containing the data request parameters.
 
-Returns **[undefined][31]** 
+Returns **[object][30]** schema and API data
 
 ### getSchema
 
--   **See: [https://developers.google.com/datastudio/connector/reference#getschema][33]
+-   **See: [https://developers.google.com/datastudio/connector/reference#getschema][32]
     **
 
 Returns the schema for the given request. This provides the information about how the connector's data is organized.
@@ -88,13 +84,13 @@ Returns the schema for the given request. This provides the information about ho
 
 -   `request` **[object][30]** A JavaScript object containing the schema request parameters.
 
-Returns **[undefined][31]** 
+Returns **[object][30]** schema for specified fields
 
 ### isAdminUser
 
-Determines if current user is an admin
+Checks if the user is an admin of the connector. This function is used to enable/disable debug features.
 
-Returns **[boolean][34]** 
+Returns **[boolean][33]** 
 
 ## Auth
 
@@ -113,12 +109,12 @@ Returns **HtmlOutput** The HTML output to show to the user.
 
 ### get3PAuthorizationUrls
 
--   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][35]
+-   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][34]
     **
 
 Gets the 3P authorization URL.
 
-Returns **[string][36]** The authorization URL.
+Returns **[string][35]** The authorization URL.
 
 ### getAuthType
 
@@ -136,7 +132,7 @@ Returns **Service** The OAuth Service
 
 Returns true if the auth service has access.
 
-Returns **[boolean][34]** True if the auth service has access.
+Returns **[boolean][33]** True if the auth service has access.
 
 ### resetAuth
 
@@ -153,11 +149,11 @@ Fileters and formats raw data from PCO into structure required by Data Studio
 
 #### Parameters
 
--   `selectedFields` **[array][37]** attributes user selected to display (optional, default `[]`)
--   `rawApiData` **[array][37]** raw responses from PCO API (optional, default `[]`)
+-   `selectedFields` **[array][36]** attributes user selected to display (optional, default `[]`)
+-   `rawApiData` **[array][36]** raw responses from PCO API (optional, default `[]`)
 -   `selectedAPI`  
 
-Returns **[array][37]** array of row objects
+Returns **[array][36]** array of row objects
 
 ### deriveSchema
 
@@ -185,81 +181,79 @@ Recursive function that fetches API data from PCO
 
 #### Parameters
 
--   `selectedAPI` **[string][36]** selected API
+-   `selectedAPI` **[string][35]** selected API
 -   `options` **[object][30]** fetch options (optional, default `{}`)
 
-Returns **[array][37]** array of API data objects
+Returns **[array][36]** array of API data objects
 
-[1]: #usage
+[1]: #license-and-terms-of-service
 
-[2]: #license
+[2]: #usage
 
-[3]: #terms-of-service
+[3]: #code-reference
 
-[4]: #main
+[4]: #getconfig
 
-[5]: #getconfig
+[5]: #parameters
 
-[6]: #parameters
+[6]: #getdata
 
-[7]: #getdata
+[7]: #parameters-1
 
-[8]: #parameters-1
+[8]: #getschema
 
-[9]: #getschema
+[9]: #parameters-2
 
-[10]: #parameters-2
+[10]: #isadminuser
 
-[11]: #isadminuser
+[11]: #auth
 
-[12]: #auth
+[12]: #authcallback
 
-[13]: #authcallback
+[13]: #parameters-3
 
-[14]: #parameters-3
+[14]: #get3pauthorizationurls
 
-[15]: #get3pauthorizationurls
+[15]: #getauthtype
 
-[16]: #getauthtype
+[16]: #getoauthservice
 
-[17]: #getoauthservice
+[17]: #isauthvalid
 
-[18]: #isauthvalid
+[18]: #resetauth
 
-[19]: #resetauth
+[19]: #utils
 
-[20]: #utils
+[20]: #buildrows
 
-[21]: #buildrows
+[21]: #parameters-4
 
-[22]: #parameters-4
+[22]: #deriveschema
 
-[23]: #deriveschema
+[23]: #parameters-5
 
-[24]: #parameters-5
+[24]: #filteruserdefinedparams
 
-[25]: #filteruserdefinedparams
+[25]: #parameters-6
 
-[26]: #parameters-6
+[26]: #requestpco
 
-[27]: #requestpco
+[27]: #parameters-7
 
-[28]: #parameters-7
+[28]: https://creativecommons.org/licenses/by-sa/4.0/
 
 [29]: https://developers.google.com/datastudio/connector/reference#getconfig
 
 [30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[31]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[31]: https://developers.google.com/datastudio/connector/reference#getdata
 
-[32]: https://developers.google.com/datastudio/connector/reference#getdata
+[32]: https://developers.google.com/datastudio/connector/reference#getschema
 
-[33]: https://developers.google.com/datastudio/connector/reference#getschema
+[33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[34]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[34]: https://developers.google.com/apps-script/reference/script/authorization-info
 
-[35]: https://developers.google.com/apps-script/reference/script/authorization-info
+[35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-
-[37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array

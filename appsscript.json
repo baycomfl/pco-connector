@@ -9,7 +9,7 @@
     "description": "TBD",
     "shortDescription": "Connect your PCO Data.",
     "privacyPolicyUrl": "https://mybayside.church/privacy-policy/",
-    "termsOfServiceUrl": "https://mybayside.church/tos/",
+    "termsOfServiceUrl": "https://creativecommons.org/licenses/by-sa/4.0/legalcode",
     "authType": [
       "OAUTH2"
     ],

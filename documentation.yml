@@ -1,14 +1,13 @@
 toc:
+  - name: License and Terms of Service
+    description: |
+      * https://creativecommons.org/licenses/by-sa/4.0/
   - name: Usage
     description: |
-      * TODO List Install and Setup.
-  - name: License
-    description: |
-      * TODO License
-  - name: Terms of Service
-    description: |
-      * TODO TOS?      
-  - name: Main
+      * Planning Center Setup
+      * Google Apps Script Setup
+      * Using the connector      
+  - name: Code Reference
     children:
     - getConfig
     - getData
