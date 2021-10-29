@@ -4,9 +4,48 @@ toc:
       * https://creativecommons.org/licenses/by-sa/4.0/
   - name: Usage
     description: |
-      * Planning Center Setup
-      * Google Apps Script Setup
-      * Using the connector      
+      ### Google Apps Script Setup
+      1. Use this wizard to create a new Google Cloud Platform Project and enable and authorize Apps Scripts (https://console.cloud.google.com/flows/enableapi?apiid=script) 
+        - Fill out the contact information and select "Web Application" as the client type
+        - No need to worry about domain or callback URL
+      2. Go into settings and find the project ID. You will need it in Apps Scripts
+      3. Create a new Apps Script project (https://script.google.com/home/projects/create)
+      4. Enable Chrome V8 runtime in the Apps Script project settings
+      5. Also in the Apps Script project, set the Google Cloud Project ID to that created in step 1
+      6. Note the OAuth2 callback URL needed for PCO: (https://script.google.com/macros/d/{SCRIPT_ID}/usercallback)
+      7. Copy all the files as they are from this repo into the script. you can also use clasp for this
+      8. Ensure you create an empty .credentials.js file. This is NOT checked into source control
+      ### Planning Center Setup
+      9. Create a devloper account with Planning Center Online (https://developer.planning.center/)
+      10. Create an OAuth2 Application (https://api.planningcenteronline.com/oauth/applications)
+      11. Ensure the API versions match the versions you define in *endpoints.js*
+      12. Set the callback URI to the value recorded in step 6
+      13. Copy the credentials into the Apps Script project .credentials.js file created in step 8
+      ```js
+        const CLIENT_ID = "pco_client_id";
+        const SECRET = "pco_clinet_secret";
+        const ADMINS = [
+          "admin1@some.email",
+          "admin2@some.email"
+        ];
+      ```
+      ### Using the connector
+      14. Deploy the Apps Script project from manifest
+      15. Copy the Deployment ID
+      16. Create a new Data Studio data source (https://datastudio.google.com/datasources/create/)
+      17. Select "Build Your Own"
+      18. Paste in the Deployment ID and click "validate"
+      19. Select the connector
+      20. Follow the Oauth2 prompts and sign in to PCO
+      21. Configure the desired endpoint
+      22. Once the connector is added to a report you can pass additinal supported params (per PCO API docs) as "pco_{{param name}}"
+      23. Each deployment creates a new activation ID and the new version must be re-added to any exisitng reports for the change to apply.
+
+      ### Questions or Problems
+      - Please create a github issue and we will do our best to address your concern or question.
+      - Please note this is not a supported product and there is no SLA or support options. We will simply do our best to help as we can.
+      - This repo is offered with no warranty, expressed or implied.
+      - Contributions are welcome through pull requests.     
   - name: Code Reference
     children:
     - getConfig

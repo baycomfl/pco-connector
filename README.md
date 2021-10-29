@@ -37,9 +37,57 @@
 
 ## Usage
 
--   Planning Center Setup
--   Google Apps Script Setup
--   Using the connector      
+### Google Apps Script Setup
+
+1.  Use this wizard to create a new Google Cloud Platform Project and enable and authorize Apps Scripts ([https://console.cloud.google.com/flows/enableapi?apiid=script][29]) 
+
+-   Fill out the contact information and select "Web Application" as the client type
+-   No need to worry about domain or callback URL
+
+2.  Go into settings and find the project ID. You will need it in Apps Scripts
+3.  Create a new Apps Script project ([https://script.google.com/home/projects/create][30])
+4.  Enable Chrome V8 runtime in the Apps Script project settings
+5.  Also in the Apps Script project, set the Google Cloud Project ID to that created in step 1
+6.  Note the OAuth2 callback URL needed for PCO: ([https://script.google.com/macros/d/{SCRIPT_ID}/usercallback][31])
+7.  Copy all the files as they are from this repo into the script. you can also use clasp for this
+8.  Ensure you create an empty .credentials.js file. This is NOT checked into source control
+
+### Planning Center Setup
+
+9.  Create a devloper account with Planning Center Online ([https://developer.planning.center/][32])
+10. Create an OAuth2 Application ([https://api.planningcenteronline.com/oauth/applications][33])
+11. Ensure the API versions match the versions you define in _endpoints.js_
+12. Set the callback URI to the value recorded in step 6
+13. Copy the credentials into the Apps Script project .credentials.js file created in step 8
+
+```js
+  const CLIENT_ID = "pco_client_id";
+  const SECRET = "pco_clinet_secret";
+  const ADMINS = [
+    "admin1@some.email",
+    "admin2@some.email"
+  ];
+```
+
+### Using the connector
+
+14. Deploy the Apps Script project from manifest
+15. Copy the Deployment ID
+16. Create a new Data Studio data source ([https://datastudio.google.com/datasources/create/][34])
+17. Select "Build Your Own"
+18. Paste in the Deployment ID and click "validate"
+19. Select the connector
+20. Follow the Oauth2 prompts and sign in to PCO
+21. Configure the desired endpoint
+22. Once the connector is added to a report you can pass additinal supported params (per PCO API docs) as "pco\_{{param name}}"
+23. Each deployment creates a new activation ID and the new version must be re-added to any exisitng reports for the change to apply.
+
+### Questions or Problems
+
+-   Please create a github issue and we will do our best to address your concern or question.
+-   Please note this is not a supported product and there is no SLA or support options. We will simply do our best to help as we can.
+-   This repo is offered with no warranty, expressed or implied.
+-   Contributions are welcome through pull requests.     
 
 
 ## Code Reference
@@ -49,48 +97,48 @@
 
 ### getConfig
 
--   **See: [https://developers.google.com/datastudio/connector/reference#getconfig][29]
+-   **See: [https://developers.google.com/datastudio/connector/reference#getconfig][35]
     **
 
 Returns the user configurable options for the connector.
 
 #### Parameters
 
--   `request` **[object][30]** A JavaScript object containing the config request parameters.
+-   `request` **[object][36]** A JavaScript object containing the config request parameters.
 
-Returns **[object][30]** results from config.build()
+Returns **[object][36]** results from config.build()
 
 ### getData
 
--   **See: [https://developers.google.com/datastudio/connector/reference#getdata][31]
+-   **See: [https://developers.google.com/datastudio/connector/reference#getdata][37]
     **
 
 Returns the tabular data for the given request.
 
 #### Parameters
 
--   `request` **[object][30]** @param {Object} A JavaScript object containing the data request parameters.
+-   `request` **[object][36]** @param {Object} A JavaScript object containing the data request parameters.
 
-Returns **[object][30]** schema and API data
+Returns **[object][36]** schema and API data
 
 ### getSchema
 
--   **See: [https://developers.google.com/datastudio/connector/reference#getschema][32]
+-   **See: [https://developers.google.com/datastudio/connector/reference#getschema][38]
     **
 
 Returns the schema for the given request. This provides the information about how the connector's data is organized.
 
 #### Parameters
 
--   `request` **[object][30]** A JavaScript object containing the schema request parameters.
+-   `request` **[object][36]** A JavaScript object containing the schema request parameters.
 
-Returns **[object][30]** schema for specified fields
+Returns **[object][36]** schema for specified fields
 
 ### isAdminUser
 
 Checks if the user is an admin of the connector. This function is used to enable/disable debug features.
 
-Returns **[boolean][33]** 
+Returns **[boolean][39]** 
 
 ## Auth
 
@@ -103,24 +151,24 @@ The OAuth callback.
 
 #### Parameters
 
--   `request` **[object][30]** The request data received from the OAuth flow.
+-   `request` **[object][36]** The request data received from the OAuth flow.
 
 Returns **HtmlOutput** The HTML output to show to the user.
 
 ### get3PAuthorizationUrls
 
--   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][34]
+-   **See: [https://developers.google.com/apps-script/reference/script/authorization-info][40]
     **
 
 Gets the 3P authorization URL.
 
-Returns **[string][35]** The authorization URL.
+Returns **[string][41]** The authorization URL.
 
 ### getAuthType
 
 Returns the Auth Type of this connector.
 
-Returns **[object][30]** The Auth type.
+Returns **[object][36]** The Auth type.
 
 ### getOAuthService
 
@@ -132,7 +180,7 @@ Returns **Service** The OAuth Service
 
 Returns true if the auth service has access.
 
-Returns **[boolean][33]** True if the auth service has access.
+Returns **[boolean][39]** True if the auth service has access.
 
 ### resetAuth
 
@@ -149,11 +197,11 @@ Fileters and formats raw data from PCO into structure required by Data Studio
 
 #### Parameters
 
--   `selectedFields` **[array][36]** attributes user selected to display (optional, default `[]`)
--   `rawApiData` **[array][36]** raw responses from PCO API (optional, default `[]`)
+-   `selectedFields` **[array][42]** attributes user selected to display (optional, default `[]`)
+-   `rawApiData` **[array][42]** raw responses from PCO API (optional, default `[]`)
 -   `selectedAPI`  
 
-Returns **[array][36]** array of row objects
+Returns **[array][42]** array of row objects
 
 ### deriveSchema
 
@@ -161,9 +209,9 @@ Creates schema for the selected API
 
 #### Parameters
 
--   `selectedApiConfig` **[object][30]** config object for selected API
+-   `selectedApiConfig` **[object][36]** config object for selected API
 
-Returns **[object][30]** Data Studio fields
+Returns **[object][36]** Data Studio fields
 
 ### filterUserDefinedParams
 
@@ -173,7 +221,7 @@ request.configParams filter for user specified parameters
 
 -   `configParams` **any** request.configParams (optional, default `{}`)
 
-Returns **[object][30]** user defined parameters
+Returns **[object][36]** user defined parameters
 
 ### requestPCO
 
@@ -181,10 +229,10 @@ Recursive function that fetches API data from PCO
 
 #### Parameters
 
--   `selectedAPI` **[string][35]** selected API
--   `options` **[object][30]** fetch options (optional, default `{}`)
+-   `selectedAPI` **[string][41]** selected API
+-   `options` **[object][36]** fetch options (optional, default `{}`)
 
-Returns **[array][36]** array of API data objects
+Returns **[array][42]** array of API data objects
 
 [1]: #license-and-terms-of-service
 
@@ -242,18 +290,30 @@ Returns **[array][36]** array of API data objects
 
 [28]: https://creativecommons.org/licenses/by-sa/4.0/
 
-[29]: https://developers.google.com/datastudio/connector/reference#getconfig
+[29]: https://console.cloud.google.com/flows/enableapi?apiid=script
 
-[30]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[30]: https://script.google.com/home/projects/create
 
-[31]: https://developers.google.com/datastudio/connector/reference#getdata
+[31]: https://script.google.com/macros/d/{SCRIPT_ID}/usercallback
 
-[32]: https://developers.google.com/datastudio/connector/reference#getschema
+[32]: https://developer.planning.center/
 
-[33]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[33]: https://api.planningcenteronline.com/oauth/applications
 
-[34]: https://developers.google.com/apps-script/reference/script/authorization-info
+[34]: https://datastudio.google.com/datasources/create/
 
-[35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[35]: https://developers.google.com/datastudio/connector/reference#getconfig
 
-[36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[37]: https://developers.google.com/datastudio/connector/reference#getdata
+
+[38]: https://developers.google.com/datastudio/connector/reference#getschema
+
+[39]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[40]: https://developers.google.com/apps-script/reference/script/authorization-info
+
+[41]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[42]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
